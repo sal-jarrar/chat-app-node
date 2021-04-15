@@ -9,12 +9,19 @@ const io = socketio(server)
 const port = process.env.PORT || 5000
 
 const publicDirectoryPath = path.join(__dirname, './public')
-let message = 'Welocom to Server'
+let message = 'Welcome to Server'
 io.on('connection', (socket) => {
   console.log('New Websocket connection')
+
   socket.emit('message', message)
+
+  socket.broadcast.emit('message', 'A new user has joined!')
+
   socket.on('sendMessage', (inputMessage) => {
     io.emit('message', inputMessage)
+  })
+  socket.on('disconnect', () => {
+    io.emit('message', 'A user has left!')
   })
 })
 
