@@ -9,8 +9,13 @@ const io = socketio(server)
 const port = process.env.PORT || 5000
 
 const publicDirectoryPath = path.join(__dirname, './public')
-io.on('connection', () => {
+let message = 'Welocom to Server'
+io.on('connection', (socket) => {
   console.log('New Websocket connection')
+  socket.emit('message', message)
+  socket.on('sendMessage', (inputMessage) => {
+    io.emit('message', inputMessage)
+  })
 })
 
 app.use(express.static(publicDirectoryPath))
